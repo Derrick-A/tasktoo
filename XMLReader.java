@@ -2,9 +2,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.*;
-
 import javax.xml.stream.*;
-
 import org.json.JSONObject;
 
 public class XMLReader {
@@ -40,11 +38,14 @@ public class XMLReader {
 
             // Close the streams
             xmlStreamReader.close();
-        } catch (FileNotFoundException | XMLStreamException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found: " + e.getMessage());
+        } catch (XMLStreamException e) {
+            System.err.println("Error while parsing XML: " + e.getMessage());
         }
     }
 
+    // Method to get user-selected fields
     private static List<String> getSelectedFields() {
         Scanner scanner = new Scanner(System.in);
         List<String> selectedFields = new ArrayList<>();
@@ -52,7 +53,10 @@ public class XMLReader {
         String input = scanner.nextLine();
         String[] fields = input.split(",");
         for (String field : fields) {
-            selectedFields.add(field.trim());
+            String trimmedField = field.trim();
+            if (!trimmedField.isEmpty()) { // Check if field is not empty
+                selectedFields.add(trimmedField);
+            }
         }
         scanner.close();
         return selectedFields;
