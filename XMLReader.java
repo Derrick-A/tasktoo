@@ -5,6 +5,8 @@ import java.util.*;
 
 import javax.xml.stream.*;
 
+import org.json.JSONObject;
+
 public class XMLReader {
     public static void main(String[] args) {
         try {
@@ -17,7 +19,7 @@ public class XMLReader {
             List<String> selectedFields = getSelectedFields();
 
             // Read the XML file and extract selected fields
-            Map<String, String> fieldValues = new HashMap<>();
+            JSONObject jsonObject = new JSONObject();
             while (xmlStreamReader.hasNext()) {
                 int event = xmlStreamReader.next();
                 switch (event) {
@@ -26,18 +28,15 @@ public class XMLReader {
                         if (selectedFields.contains(elementName)) {
                             xmlStreamReader.next(); // Move to character event
                             String value = xmlStreamReader.getText().trim();
-                            fieldValues.put(elementName, value);
+                            jsonObject.put(elementName, value);
                         }
                         break;
                 }
             }
 
-            // Print the selected field values
-            System.out.println("Selected Field Values:");
-            for (String field : selectedFields) {
-                String value = fieldValues.get(field);
-                System.out.println(field + ": " + value);
-            }
+            // Print the selected field values in JSON format
+            System.out.println("Selected Field Values (JSON):");
+            System.out.println(jsonObject.toString(4)); // Indent with 4 spaces
 
             // Close the streams
             xmlStreamReader.close();
